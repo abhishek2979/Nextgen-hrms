@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply font-body bg-sand-50 text-ink-900 antialiased;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display;
+}
+
+/* Focus visibility for keyboard users */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #D6912B;
+  outline-offset: 2px;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ink-800 text-sand-50 px-5 py-2.5 text-sm font-semibold tracking-wide transition-colors hover:bg-ink-700 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-ink-800/15 bg-white px-5 py-2.5 text-sm font-semibold text-ink-800 transition-colors hover:bg-sand-100;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-ink-700 transition-colors hover:bg-sand-100;
+  }
+  .card {
+    @apply rounded-xl2 bg-white border border-ink-900/5 shadow-soft;
+  }
+  .input-field {
+    @apply w-full rounded-lg border border-ink-900/15 bg-white px-3.5 py-2.5 text-sm text-ink-900 placeholder:text-ink-900/40 transition-colors focus:border-amber-500;
+  }
+  .label-text {
+    @apply mb-1.5 block text-sm font-medium text-ink-800;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .badge-draft { @apply bg-ink-900/5 text-ink-700; }
+  .badge-submitted { @apply bg-amber-400/20 text-amber-600; }
+  .badge-approved { @apply bg-moss-500/15 text-moss-600; }
+  .badge-forwarded { @apply bg-ink-800/10 text-ink-800; }
+  .badge-rejected { @apply bg-rose-100 text-rose-600; }
+}

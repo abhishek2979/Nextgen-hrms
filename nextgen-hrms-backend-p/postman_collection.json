@@ -1,0 +1,259 @@
+{
+  "info": {
+    "name": "NextGen HRMS - APAR (Production)",
+    "_postman_id": "f1a1c1e0-0000-0000-0000-000000000002",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "token",   "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "1 - Auth",
+      "item": [
+        {
+          "name": "Login - Employee",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var data = pm.response.json();",
+                "if (data.token) {",
+                "  pm.collectionVariables.set('token', data.token);",
+                "  console.log('Token saved. User:', data.name, '| Role:', data.role);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP10234\",\n  \"password\": \"employee123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login - Admin",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "exec": [
+                "var data = pm.response.json();",
+                "if (data.token) {",
+                "  pm.collectionVariables.set('token', data.token);",
+                "  console.log('Token saved. User:', data.name, '| Role:', data.role);",
+                "}"
+              ],
+              "type": "text/javascript"
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP10001\",\n  \"password\": \"admin123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/forgot-password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP10234\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/reset-password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP10234\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"newpass123\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 - APAR Reports (Employee)",
+      "item": [
+        {
+          "name": "Submit Self-Appraisal",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/submit",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": 2,\n  \"cycle\": \"2025-26\",\n  \"periodFrom\": \"2025-04-01\",\n  \"periodTo\": \"2026-03-31\",\n  \"postHeld\": \"Software Engineering Intern\",\n  \"workSummary\": \"Worked on the NextGen HRMS APAR module, building both frontend and backend.\",\n  \"achievements\": [\n    \"Built a responsive React frontend with role-based dashboards\",\n    \"Implemented APAR submission and review workflow\"\n  ],\n  \"targets\": [\n    { \"target\": \"Complete frontend UI\", \"achievement\": \"Completed ahead of schedule\" }\n  ],\n  \"trainingsAttended\": \"Spring Boot fundamentals workshop\",\n  \"selfRating\": \"VERY_GOOD\",\n  \"additionalRemarks\": \"Looking forward to feedback.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Save Draft",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/draft",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": 2,\n  \"cycle\": \"2025-26\",\n  \"postHeld\": \"Software Engineering Intern\",\n  \"workSummary\": \"Draft in progress...\",\n  \"selfRating\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Reports",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/apar/my-reports?employeeId=2"
+          }
+        },
+        {
+          "name": "Get Report By Id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/apar/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - APAR Reports (Admin)",
+      "item": [
+        {
+          "name": "Get All Reports",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/apar/all?status=SUBMITTED"
+          }
+        },
+        {
+          "name": "Approve Report",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/1/approve",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"Good progress this cycle, keep it up.\",\n  \"grading\": \"VERY_GOOD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Reject Report",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/1/reject",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"Please add more measurable achievements and resubmit.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Forward Report (Head Office)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/1/forward",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remarks\": \"Forwarded for final review.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Approve Reports",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/bulk-approve",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [1, 2],\n  \"remarks\": \"Well done this cycle.\",\n  \"grading\": \"VERY_GOOD\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Return Reports",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/bulk-reject",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [1, 2],\n  \"remarks\": \"Please add more measurable achievements.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Bulk Forward Reports",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/apar/bulk-forward",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [1, 2],\n  \"remarks\": \"Forwarded to head office for record.\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - Users (Admin)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP10003\",\n  \"name\": \"Rahul Verma\",\n  \"email\": \"rahul.verma@nextgen.gov.in\",\n  \"password\": \"password123\",\n  \"department\": \"Electronics & Communication\",\n  \"role\": \"EMPLOYEE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Send Reminders",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/users/send-reminders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeIds\": [2],\n  \"message\": \"Please complete and submit your self-appraisal for this cycle.\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
